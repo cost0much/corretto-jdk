@@ -20,12 +20,20 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+package jdk.jpackage.test;
 
-/*
- * @test
- * @bug 8343781
- * @summary Test for `@since` in jdk.hotspot.agent module
- * @requires vm.hasSA
- * @library /test/lib /test/jdk/tools/sincechecker
- * @run main SinceChecker jdk.hotspot.agent
- */
+import java.util.HashSet;
+import java.util.Set;
+
+record Comm<T>(Set<T> common, Set<T> unique1, Set<T> unique2) {
+
+    static <T> Comm<T> compare(Set<T> a, Set<T> b) {
+        Set<T> common = new HashSet<>(a);
+        common.retainAll(b);
+        Set<T> unique1 = new HashSet<>(a);
+        unique1.removeAll(common);
+        Set<T> unique2 = new HashSet<>(b);
+        unique2.removeAll(common);
+        return new Comm(common, unique1, unique2);
+    }
+}

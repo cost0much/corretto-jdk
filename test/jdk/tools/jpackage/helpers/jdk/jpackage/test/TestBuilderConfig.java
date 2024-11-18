@@ -21,11 +21,42 @@
  * questions.
  */
 
-/*
- * @test
- * @bug 8343781
- * @summary Test for `@since` in jdk.hotspot.agent module
- * @requires vm.hasSA
- * @library /test/lib /test/jdk/tools/sincechecker
- * @run main SinceChecker jdk.hotspot.agent
- */
+package jdk.jpackage.test;
+
+import java.util.Objects;
+import jdk.internal.util.OperatingSystem;
+
+final class TestBuilderConfig {
+    TestBuilderConfig() {
+    }
+
+    TestMethodSupplier createTestMethodSupplier() {
+        return new TestMethodSupplier(os);
+    }
+
+    OperatingSystem getOperatingSystem() {
+        return os;
+    }
+
+    static TestBuilderConfig getDefault() {
+        return DEFAULT.get();
+    }
+
+    static void setOperatingSystem(OperatingSystem os) {
+        Objects.requireNonNull(os);
+        DEFAULT.get().os = os;
+    }
+
+    static void setDefaults() {
+        DEFAULT.set(new TestBuilderConfig());
+    }
+
+    private OperatingSystem os = OperatingSystem.current();
+
+    private static final ThreadLocal<TestBuilderConfig> DEFAULT = new ThreadLocal<>() {
+        @Override
+        protected TestBuilderConfig initialValue() {
+            return new TestBuilderConfig();
+        }
+    };
+}

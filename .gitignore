@@ -23,3 +23,5 @@ NashornProfile.txt
 commitId.txt
 /compile_commands.json
 /.cache
+/.gdbinit
+/.lldbinit

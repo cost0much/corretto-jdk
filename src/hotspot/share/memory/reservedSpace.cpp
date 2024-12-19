@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2024, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -19,6 +19,19 @@
  * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
  * or visit www.oracle.com if you need additional information or have any
  * questions.
+ *
  */
-module m {
+
+#include "precompiled.hpp"
+#include "memory/reservedSpace.hpp"
+#include "runtime/os.hpp"
+#include "utilities/align.hpp"
+
+#ifdef ASSERT
+void ReservedSpace::sanity_checks() {
+  assert(is_aligned(_base, os::vm_allocation_granularity()), "Unaligned base");
+  assert(is_aligned(_base, _alignment), "Unaligned base");
+  assert(is_aligned(_size, os::vm_page_size()), "Unaligned size");
+  assert(os::page_sizes().contains(_page_size), "Invalid pagesize");
 }
+#endif

@@ -30,6 +30,7 @@
 %global additional_configure_options     $additional_configure_options
 %global zlib_option $zlib_option
 %global use_gcc_ver $use_gcc_ver
+%global ignore_urls $ignore_urls
 
 # Disable build_id links as they can collide between versions of Corretto
 %global _build_id_links none
@@ -288,9 +289,11 @@ bash ./configure \\
         --with-vendor-version-string="Corretto%{?experimental_feature:-%{experimental_feature}}-%{java_version}.%{build_id}.%{release_id}" \\
         --with-version-pre= \\
         --with-vendor-name="Amazon.com Inc." \\
+%if 0%{?ignore_urls} != 1
         --with-vendor-url="https://aws.amazon.com/corretto/" \\
         --with-vendor-bug-url="https://github.com/corretto/corretto-${java_spec_version}/issues/" \\
         --with-vendor-vm-bug-url="https://github.com/corretto/corretto-${java_spec_version}/issues/" \\
+%endif
         --with-debug-level=$debug_level \\
         --with-native-debug-symbols=zipped
 
